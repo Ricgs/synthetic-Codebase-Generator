@@ -1,0 +1,10 @@
+{
+  "project_name": "app-calculadora",
+  "language": "python",
+  "files": [
+    {
+      "name": "main.py",
+      "description": "Cria uma função chamada soma(a, b) que retorna a soma de dois números. Adiciona um print no final para testar a função."
+    }
+  ]
+}
