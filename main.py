@@ -3,47 +3,102 @@ import os
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
 
-# Carregar variáveis do .env
 load_dotenv()
+token = os.getenv("HF_API_TOKEN")
 
-# Inicializa o cliente oficial da Hugging Face
-# O cliente já gere a autenticação pelo api_key
-client = InferenceClient(api_key=os.getenv("HF_API_TOKEN"))
+# Inicializa o cliente com o modelo LLM Coder padrão da API Serverless
+client = InferenceClient(model="Qwen/Qwen2.5-Coder-7B-Instruct", token=token)
 
 def load_profile(filepath):
     with open(filepath, 'r') as file:
         return json.load(file)
 
 def generate_file_content(file_info, language):
-    # Definimos o ID do modelo que pretendemos usar
-    model_id = "WizardLM/WizardCoder-15B-V1.0"
+    print(f"-> A pedir à IA para gerar: {file_info['name']}...")
     
-    # Construção do prompt seguindo a estrutura de instrução do modelo
-    prompt = f"### Instruction:\nEscreve apenas código {language} para um ficheiro chamado {file_info['name']}. {file_info['description']}\n\n### Response:\n"
+    # Customização do prompt para instruir o modelo a focar-se apenas no código puro
+    mensagem = (
+        f"Age como um engenheiro de software sénior. Escreve exclusivamente o código fonte funcional em {language} "
+        f"para o ficheiro '{file_info['name']}'. Não adiciones nenhuma explicação em texto, Markdown ou blocos de código adicionais. "
+        f"O código deve cumprir este requisito: {file_info['description']}"
+    )
     
-    # Chamada à API de inferência
-    response = client.text_generation(
-        model=model_id,
-        prompt=prompt,
-        max_new_tokens=200,
+    messages = [{"role": "user", "content": mensagem}]
+    
+    response = client.chat_completion(
+        messages=messages,
+        max_tokens=700,
         temperature=0.2
     )
-    return response
+    return response.choices[0].message.content
 
-# 1. Carregar o perfil
+def write_workflow_file(repo_path):
+    """Injeta automaticamente o workflow de CI/CD para testar o repositório sintético."""
+    workflow_dir = os.path.join(repo_path, ".github/workflows")
+    os.makedirs(workflow_dir, exist_ok=True)
+    
+    ci_content = """name: Pipeline de Teste Sintetizado
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do Código Sintético
+      uses: actions/checkout@v4
+
+    - name: Configurar Ambiente Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Instalar Dependências Sintéticas
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Executar Testes Unitários
+      env:
+        PYTHONPATH: .
+      run: |
+        pytest
+"""
+    with open(os.path.join(workflow_dir, "ci.yml"), "w") as f:
+        f.write(ci_content)
+    print("Workflow CI/CD (.github/workflows/ci.yml) injetado com sucesso!")
+
+# --- Fluxo de Execução Principal ---
 perfil = load_profile('profile.json')
-print(f"A iniciar geração para o projeto: {perfil['project_name']}")
-
-# 2. Criar a pasta do repositório local
 repo_path = f"./{perfil['project_name']}"
 os.makedirs(repo_path, exist_ok=True)
 
-# 3. Gerar os ficheiros com o WizardCoder
+print(f"=== A iniciar geração do Workload para: {perfil['project_name']} ===")
+
+# 1. Gerar ficheiro de dependências automaticamente
+if 'dependencies_file' in perfil:
+    dep_file_path = os.path.join(repo_path, perfil['dependencies_file'])
+    with open(dep_file_path, "w") as f:
+        f.write("\n".join(perfil['dependencies']))
+    print(f"Ficheiro de dependências ({perfil['dependencies_file']}) criado com sucesso!")
+
+# 2. Gerar recursivamente os ficheiros de código através do LLM
 for file in perfil['files']:
-    print(f"A pedir à IA para gerar {file['name']}...")
+    # Extrai o caminho completo e garante que as subpastas existem antes de gravar
+    full_file_path = os.path.join(repo_path, file['name'])
+    os.makedirs(os.path.dirname(full_file_path), exist_ok=True)
+    
     content = generate_file_content(file, perfil['language'])
     
     if content:
-        with open(os.path.join(repo_path, file['name']), 'w') as f:
-            f.write(content)
-        print(f"Ficheiro {file['name']} guardado com sucesso!")
+        # Limpa eventuais resíduos de formatação markdown ``` que o modelo possa retornar
+        clean_content = content.replace("```python", "").replace("```", "").strip()
+        with open(full_file_path, 'w') as f:
+            f.write(clean_content)
+        print(f"✔ Guardado em: {file['name']}")
+
+# 3. Injetar a infraestrutura de CI/CD para o ambiente sandbox
+write_workflow_file(repo_path)
+
+print(f"\n=== Sucesso: Repositório sintético estruturado em '{repo_path}' ===")

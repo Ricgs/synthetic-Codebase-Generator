@@ -1,10 +1,16 @@
 {
-  "project_name": "app-calculadora",
-  "language": "python",
+  "project_name": "synthetic-calculator-app",
+  "language": "Python",
+  "dependencies_file": "requirements.txt",
+  "dependencies": ["pytest==8.2.2", "radon==6.0.1"],
   "files": [
     {
-      "name": "main.py",
-      "description": "Cria uma função chamada soma(a, b) que retorna a soma de dois números. Adiciona um print no final para testar a função."
+      "name": "src/calculator.py",
+      "description": "Uma classe Calculator com operações matemáticas básicas (soma, subtração, multiplicação, divisão). Deve incluir validação de tipos de dados e lançar uma exceção ValueError em caso de divisão por zero."
+    },
+    {
+      "name": "tests/test_calculator.py",
+      "description": "Testes unitários utilizando o formato pytest para validar todas as operações da classe Calculator no ficheiro src/calculator.py, incluindo os casos de erro e exceções."
     }
   ]
 }
