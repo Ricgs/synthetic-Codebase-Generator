@@ -2,15 +2,15 @@
   "project_name": "synthetic-calculator-app",
   "language": "Python",
   "dependencies_file": "requirements.txt",
-  "dependencies": ["pytest==8.2.2", "radon==6.0.1"],
+  "dependencies": ["pytest==8.2.2"],
   "files": [
     {
       "name": "src/calculator.py",
-      "description": "Uma classe Calculator com operações matemáticas básicas (soma, subtração, multiplicação, divisão). Deve incluir validação de tipos de dados e lançar uma exceção ValueError em caso de divisão por zero."
+      "description": "Uma classe Calculator contendo estritamente 4 métodos: add, subtract, multiply e divide. Valida se os inputs são números. No método divide, se o divisor for zero, deves usar 'raise ValueError(\"Cannot divide by zero\")'."
     },
     {
       "name": "tests/test_calculator.py",
-      "description": "Testes unitários utilizando o formato pytest para validar todas as operações da classe Calculator no ficheiro src/calculator.py, incluindo os casos de erro e exceções."
+      "description": "Testes unitários usando pytest para o ficheiro src/calculator.py. Regras estritas: 1) Testa apenas os métodos add, subtract, multiply e divide. NÃO inventes testes para sqrt ou outras funções. 2) No teste de divisão por zero, tens de usar 'with pytest.raises(ValueError):' para capturar o erro correto."
     }
   ]
 }
