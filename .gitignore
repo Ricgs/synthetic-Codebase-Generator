@@ -1,3 +1,5 @@
 .env
 venv/
-synthetic-calculator-app/
+fastapi-realworld-example-app/
+synthetic-fastapi-realworld-example-app/
+__pycache__/

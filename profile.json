@@ -1,16 +1,314 @@
 {
-  "project_name": "synthetic-calculator-app",
-  "language": "Python",
-  "dependencies_file": "requirements.txt",
-  "dependencies": ["pytest==8.2.2"],
+  "project_name": "synthetic-fastapi-realworld-example-app",
+  "language": "Infer from files",
+  "dependencies_file": "pyproject.toml",
+  "dependencies": "[tool.poetry]\nname = \"fastapi-realworld-example-app\"\nversion = \"0.0.0\"\ndescription = \"Backend logic implementation for https://github.com/gothinkster/realworld with awesome FastAPI\"\nauthors = [\"Nik Sidnev <sidnev.nick@gmail.com>\"]\nlicense = \"MIT\"\n\n[tool.poetry.dependencies]\npython = \"^3.9\"\nuvicorn = \"^0.18.2\"\nfastapi = \"^0.79.1\"\npydantic = { version = \"^1.9\", extras = [\"email\", \"dotenv\"] }\npasslib = { version = \"^1.7\", extras = [\"bcrypt\"] }\npyjwt = \"^2.4\"\ndatabases = \"^0.6.1\"\nasyncpg = \"^0.26.0\"\npsycopg2-binary = \"^2.9.3\"\naiosql = \"^6.2\"\npypika = \"^0.48.9\"\nalembic = \"^1.8\"\npython-slugify = \"^6.1\"\nUnidecode = \"^1.3\"\nloguru = \"^0.6.0\"\n\n[tool.poetry.dev-dependencies]\nblack = \"^22.6.0\"\nisort = \"^5.10\"\nautoflake = \"^1.4\"\nwemake-python-styleguide = \"^0.16.1\"\nmypy = \"^0.971\"\nflake8-fixme = \"^1.1\"\npytest = \"^7.1\"\npytest-cov = \"^3.0\"\npytest-asyncio = \"^0.19.0\"\npytest-env = \"^0.6.2\"\npytest-xdist = \"^2.4.0\"\nhttpx = \"^0.23.0\"\nasgi-lifespan = \"^1.0.1\"\n\n[tool.isort]\nprofile = \"black\"\nsrc_paths = [\"app\", \"tests\"]\ncombine_as_imports = true\n\n[tool.pytest.ini_options]\ntestpaths = \"tests\"\nfilterwarnings = \"error\"\naddopts = '''\n  --strict-markers\n  --tb=short\n  --cov=app\n  --cov=tests\n  --cov-branch\n  --cov-report=term-missing\n  --cov-report=html\n  --cov-report=xml\n  --no-cov-on-fail\n  --cov-fail-under=100\n  --numprocesses=auto\n  --asyncio-mode=auto\n'''\nenv = [\n  \"SECRET_KEY=secret\",\n  \"MAX_CONNECTIONS_COUNT=1\",\n  \"MIN_CONNECTIONS_COUNT=1\"\n]\n\n[build-system]\nrequires = [\"poetry>=1.0\"]\nbuild-backend = \"poetry.masonry.api\"\n",
   "files": [
     {
-      "name": "src/calculator.py",
-      "description": "Uma classe Calculator contendo estritamente 4 métodos: add, subtract, multiply e divide. Valida se os inputs são números. No método divide, se o divisor for zero, deves usar 'raise ValueError(\"Cannot divide by zero\")'."
+      "name": "docker-compose.yml"
     },
     {
-      "name": "tests/test_calculator.py",
-      "description": "Testes unitários usando pytest para o ficheiro src/calculator.py. Regras estritas: 1) Testa apenas os métodos add, subtract, multiply e divide. NÃO inventes testes para sqrt ou outras funções. 2) No teste de divisão por zero, tens de usar 'with pytest.raises(ValueError):' para capturar o erro correto."
+      "name": ".github/dependabot.yml"
+    },
+    {
+      "name": ".github/workflows/conduit.yml"
+    },
+    {
+      "name": ".github/workflows/deploy.yml"
+    },
+    {
+      "name": ".github/workflows/styles.yml"
+    },
+    {
+      "name": ".github/workflows/tests.yml"
+    },
+    {
+      "name": "app/main.py"
+    },
+    {
+      "name": "app/__init__.py"
+    },
+    {
+      "name": "app/api/__init__.py"
+    },
+    {
+      "name": "app/api/dependencies/articles.py"
+    },
+    {
+      "name": "app/api/dependencies/authentication.py"
+    },
+    {
+      "name": "app/api/dependencies/comments.py"
+    },
+    {
+      "name": "app/api/dependencies/database.py"
+    },
+    {
+      "name": "app/api/dependencies/profiles.py"
+    },
+    {
+      "name": "app/api/dependencies/__init__.py"
+    },
+    {
+      "name": "app/api/errors/http_error.py"
+    },
+    {
+      "name": "app/api/errors/validation_error.py"
+    },
+    {
+      "name": "app/api/errors/__init__.py"
+    },
+    {
+      "name": "app/api/routes/api.py"
+    },
+    {
+      "name": "app/api/routes/authentication.py"
+    },
+    {
+      "name": "app/api/routes/comments.py"
+    },
+    {
+      "name": "app/api/routes/profiles.py"
+    },
+    {
+      "name": "app/api/routes/tags.py"
+    },
+    {
+      "name": "app/api/routes/users.py"
+    },
+    {
+      "name": "app/api/routes/__init__.py"
+    },
+    {
+      "name": "app/api/routes/articles/api.py"
+    },
+    {
+      "name": "app/api/routes/articles/articles_common.py"
+    },
+    {
+      "name": "app/api/routes/articles/articles_resource.py"
+    },
+    {
+      "name": "app/api/routes/articles/__init__.py"
+    },
+    {
+      "name": "app/core/config.py"
+    },
+    {
+      "name": "app/core/events.py"
+    },
+    {
+      "name": "app/core/logging.py"
+    },
+    {
+      "name": "app/core/__init__.py"
+    },
+    {
+      "name": "app/core/settings/app.py"
+    },
+    {
+      "name": "app/core/settings/base.py"
+    },
+    {
+      "name": "app/core/settings/development.py"
+    },
+    {
+      "name": "app/core/settings/production.py"
+    },
+    {
+      "name": "app/core/settings/test.py"
+    },
+    {
+      "name": "app/core/settings/__init__.py"
+    },
+    {
+      "name": "app/db/errors.py"
+    },
+    {
+      "name": "app/db/events.py"
+    },
+    {
+      "name": "app/db/__init__.py"
+    },
+    {
+      "name": "app/db/migrations/env.py"
+    },
+    {
+      "name": "app/db/migrations/versions/fdf8821871d7_main_tables.py"
+    },
+    {
+      "name": "app/db/queries/queries.py"
+    },
+    {
+      "name": "app/db/queries/tables.py"
+    },
+    {
+      "name": "app/db/queries/__init__.py"
+    },
+    {
+      "name": "app/db/repositories/articles.py"
+    },
+    {
+      "name": "app/db/repositories/base.py"
+    },
+    {
+      "name": "app/db/repositories/comments.py"
+    },
+    {
+      "name": "app/db/repositories/profiles.py"
+    },
+    {
+      "name": "app/db/repositories/tags.py"
+    },
+    {
+      "name": "app/db/repositories/users.py"
+    },
+    {
+      "name": "app/db/repositories/__init__.py"
+    },
+    {
+      "name": "app/models/common.py"
+    },
+    {
+      "name": "app/models/__init__.py"
+    },
+    {
+      "name": "app/models/domain/articles.py"
+    },
+    {
+      "name": "app/models/domain/comments.py"
+    },
+    {
+      "name": "app/models/domain/profiles.py"
+    },
+    {
+      "name": "app/models/domain/rwmodel.py"
+    },
+    {
+      "name": "app/models/domain/users.py"
+    },
+    {
+      "name": "app/models/domain/__init__.py"
+    },
+    {
+      "name": "app/models/schemas/articles.py"
+    },
+    {
+      "name": "app/models/schemas/comments.py"
+    },
+    {
+      "name": "app/models/schemas/jwt.py"
+    },
+    {
+      "name": "app/models/schemas/profiles.py"
+    },
+    {
+      "name": "app/models/schemas/rwschema.py"
+    },
+    {
+      "name": "app/models/schemas/tags.py"
+    },
+    {
+      "name": "app/models/schemas/users.py"
+    },
+    {
+      "name": "app/models/schemas/__init__.py"
+    },
+    {
+      "name": "app/resources/strings.py"
+    },
+    {
+      "name": "app/resources/__init__.py"
+    },
+    {
+      "name": "app/services/articles.py"
+    },
+    {
+      "name": "app/services/authentication.py"
+    },
+    {
+      "name": "app/services/comments.py"
+    },
+    {
+      "name": "app/services/jwt.py"
+    },
+    {
+      "name": "app/services/security.py"
+    },
+    {
+      "name": "app/services/__init__.py"
+    },
+    {
+      "name": "postman/Conduit.postman_collection.json"
+    },
+    {
+      "name": "tests/conftest.py"
+    },
+    {
+      "name": "tests/fake_asyncpg_pool.py"
+    },
+    {
+      "name": "tests/__init__.py"
+    },
+    {
+      "name": "tests/test_api/__init__.py"
+    },
+    {
+      "name": "tests/test_api/test_errors/test_422_error.py"
+    },
+    {
+      "name": "tests/test_api/test_errors/test_error.py"
+    },
+    {
+      "name": "tests/test_api/test_errors/__init__.py"
+    },
+    {
+      "name": "tests/test_api/test_routes/test_articles.py"
+    },
+    {
+      "name": "tests/test_api/test_routes/test_authentication.py"
+    },
+    {
+      "name": "tests/test_api/test_routes/test_comments.py"
+    },
+    {
+      "name": "tests/test_api/test_routes/test_login.py"
+    },
+    {
+      "name": "tests/test_api/test_routes/test_profiles.py"
+    },
+    {
+      "name": "tests/test_api/test_routes/test_registration.py"
+    },
+    {
+      "name": "tests/test_api/test_routes/test_tags.py"
+    },
+    {
+      "name": "tests/test_api/test_routes/test_users.py"
+    },
+    {
+      "name": "tests/test_api/test_routes/__init__.py"
+    },
+    {
+      "name": "tests/test_db/__init__.py"
+    },
+    {
+      "name": "tests/test_db/test_queries/test_tables.py"
+    },
+    {
+      "name": "tests/test_db/test_queries/__init__.py"
+    },
+    {
+      "name": "tests/test_schemas/test_rw_model.py"
+    },
+    {
+      "name": "tests/test_schemas/__init__.py"
+    },
+    {
+      "name": "tests/test_services/test_jwt.py"
+    },
+    {
+      "name": "tests/test_services/__init__.py"
     }
   ]
 }
