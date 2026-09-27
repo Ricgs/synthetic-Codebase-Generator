@@ -2,8 +2,8 @@ import os
 import json
 from openai import OpenAI
 
-from profiling_v2 import profile_repository
-from generate_v2 import generate_synthetic_repo
+from profiling_v3 import profile_repository
+from generate_v3 import generate_synthetic_repo
 from review import review_repository
 
 def main():

@@ -5,7 +5,7 @@ def profile_repository(source_repo_path, output_profile_path="profile.json"):
     """Profiles the repository mapping the file tree and capturing dependencies."""
     print(f"\n=== FASE 1: Mapping repository structure for '{source_repo_path}' ===")
     
-    ignore_dirs = {'.git', '__pycache__', 'venv', '.venv', 'node_modules', '.github'}
+    ignore_dirs = {'.git', '__pycache__', 'venv', '.venv', 'node_modules'}
     valid_extensions = {'.py', '.js', '.ts', '.md', '.txt', '.json', '.yml', '.yaml'}
     
     project_name = os.path.basename(os.path.normpath(source_repo_path))

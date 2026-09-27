@@ -23,42 +23,65 @@ def generate_file_content(file_info, original_content, language, client):
     )
     return response.choices[0].message.content
 
-def write_workflow_file(repo_path):
-    """Injects automatically the CI/CD workflow to test the synthetic repository."""
+def write_workflow_file(profile, repo_path):
+    """Injects a language-specific CI/CD workflow based on the project profile."""
     workflow_dir = os.path.join(repo_path, ".github/workflows")
     os.makedirs(workflow_dir, exist_ok=True)
     
-    ci_content = """name: Synthetic Repository CI/CD
-
+    dep_file = profile.get("dependencies_file", "")
+    
+    # 1. Template para Node.js / JavaScript / TypeScript
+    if dep_file in ["package.json", "yarn.lock"]:
+        ci_content = """name: Node.js Synthetic CI
 on: [push, pull_request]
-
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - run: npm install
+    - run: npm test --if-present
+"""
+    # 2. Template para Java
+    elif dep_file in ["pom.xml", "build.gradle"]:
+        ci_content = """name: Java Synthetic CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - run: mvn -B test --file pom.xml
+"""
+    # 3. Template Default (Python)
+    else:
+        ci_content = """name: Python Synthetic CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: '3.12'
-
-    - name: Install Synthetic Dependencies
-      run: |
-        python -m pip install --upgrade pip
+    - run: |
+        python -m pip install --upgrade pip pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-    - name: Run Unit Tests
-      env:
-        PYTHONPATH: .
-      run: |
-        pytest
+        if [ -f pyproject.toml ]; then pip install -e . || pip install poetry && poetry install; fi
+    - run: pytest
 """
+
     with open(os.path.join(workflow_dir, "ci.yml"), "w", encoding="utf-8") as f:
         f.write(ci_content)
-    print("Workflow CI/CD (.github/workflows/ci.yml) injected successfully!")
+    print(f"Workflow CI/CD dinâmico injetado com base em: {dep_file}")
 
 # A função agora recebe 'source_repo_path' para poder ler o código original
 def generate_synthetic_repo(profile, source_repo_path, repo_path, client):
@@ -93,4 +116,4 @@ def generate_synthetic_repo(profile, source_repo_path, repo_path, client):
         else:
             print(f"Warning: Original file not found at {orig_file_path} - Generation skipped.")
 
-    write_workflow_file(repo_path)
+    write_workflow_file(profile, repo_path)
