@@ -7,8 +7,6 @@ from generate_v3 import generate_synthetic_repo
 from review import review_repository
 
 def main():
-    # O cliente aponta exclusivamente para o motor local
-    # Validações de tokens externos (Hugging Face) foram removidas para garantir o isolamento
     client = OpenAI(
         base_url='http://localhost:11434/v1',
         api_key='ollama' 
@@ -22,7 +20,6 @@ def main():
     # --- FASE 1: PROFILING ---
     print(f"\n=== FASE 1: Profile extraction for '{source_repo}' ===")
     if os.listdir(source_repo): 
-        # A Fase 1 é agora puramente estrutural e não consome o cliente LLM
         perfil = profile_repository(source_repo, profile_file)
     else:
         print(f"The repository '{source_repo}' is empty. Add files there to proceed.")
@@ -37,7 +34,6 @@ def main():
     # --- FASE 2: GERAÇÃO ---
     synthetic_repo = f"./{perfil['project_name']}"
     print(f"\n=== FASE 2: Synthetic Repository Generation for '{synthetic_repo}' ===")
-    # O 'source_repo' é injetado para leitura direta do código original e anonimização 1:1
     generate_synthetic_repo(perfil, source_repo, synthetic_repo, client)
     print(f"\nSuccess: Synthetic repository generated for '{synthetic_repo}'")
 
