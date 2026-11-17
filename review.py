@@ -27,7 +27,6 @@ def review_repository(source_repo_path, synthetic_repo_path, profile, client):
     
     report_path = "review_report.md"
     
-    # Abre um ficheiro Markdown para escrever o relatório
     with open(report_path, "w", encoding="utf-8") as report_file:
         report_file.write(f"# Synthetic Code Review Report\n")
         report_file.write(f"**Source Repository:** {source_repo_path}\n\n")
@@ -47,10 +46,8 @@ def review_repository(source_repo_path, synthetic_repo_path, profile, client):
                     
                 result = review_synthetic_code(orig_content, synth_content, client)
                 
-                # Formata a saída
                 output_text = f"\n### File: `{rel_path}`\n{result}\n{'-'*40}"
                 
-                # Imprime no terminal e guarda no ficheiro
                 print(output_text)
                 report_file.write(output_text + "\n")
             else:
