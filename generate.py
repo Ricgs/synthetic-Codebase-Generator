@@ -18,8 +18,8 @@ def generate_file_content(file_info, original_content, language, client):
     response = client.chat.completions.create(
         model="qwen2.5-coder:7b",
         messages=messages,
-        max_tokens=2000, # Aumentado para suportar ficheiros inteiros
-        temperature=0.1  # Reduzido de 0.2 para forçar maior rigor estrutural
+        max_tokens=2000,
+        temperature=0.1
     )
     return response.choices[0].message.content
 
@@ -83,7 +83,6 @@ jobs:
         f.write(ci_content)
     print(f"Workflow CI/CD dinâmico injetado com base em: {dep_file}")
 
-# A função agora recebe 'source_repo_path' para poder ler o código original
 def generate_synthetic_repo(profile, source_repo_path, repo_path, client):
     """Generates a synthetic repository based on direct code sanitization."""
     os.makedirs(repo_path, exist_ok=True)
@@ -105,7 +104,6 @@ def generate_synthetic_repo(profile, source_repo_path, repo_path, client):
             with open(orig_file_path, 'r', encoding='utf-8') as f:
                 original_content = f.read()
                 
-            # Passa o conteúdo original diretamente para o modelo
             content = generate_file_content(file, original_content, profile.get('language', 'python'), client)
             
             if content:
