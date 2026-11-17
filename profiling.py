@@ -28,7 +28,6 @@ def profile_repository(source_repo_path, output_profile_path="profile.json"):
         "files": []
     }
     
-    # 1. Identificar e extrair o ficheiro de dependências principal
     found_dep_file = None
     for dep_file in common_dependency_files:
         req_path = os.path.join(source_repo_path, dep_file)
@@ -44,12 +43,10 @@ def profile_repository(source_repo_path, output_profile_path="profile.json"):
     else:
         print("Warning: No standard dependency file was found.")
     
-    # 2. Mapear a árvore de diretórios e os ficheiros de código
     for root, dirs, files in os.walk(source_repo_path):
         dirs[:] = [d for d in dirs if d not in ignore_dirs]
         
         for file in files:
-            # Ignora o ficheiro de dependências, pois já foi guardado na raiz do perfil
             if found_dep_file and file == found_dep_file:
                 continue
                 
@@ -60,7 +57,6 @@ def profile_repository(source_repo_path, output_profile_path="profile.json"):
             rel_path = os.path.relpath(file_path, source_repo_path)
             
             print(f"-> Mapping file: {rel_path}")
-            # Guardamos apenas o caminho. A leitura do conteúdo fica para a Fase 2.
             profile["files"].append({
                 "name": rel_path
             })
